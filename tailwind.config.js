@@ -1,0 +1,76 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        background: '#000000',
+        surface: '#131313',
+        'surface-container': '#1f1f1f',
+        'surface-container-low': '#1b1b1b',
+        'surface-container-high': '#2a2a2a',
+        'surface-container-lowest': '#0e0e0e',
+        'surface-variant': '#353535',
+        'on-surface': '#e2e2e2',
+        'on-surface-variant': '#e7bdb9',
+        'on-background': '#e2e2e2',
+        primary: '#E21D2C',
+        'primary-container': '#E21D2C',
+        'on-primary': '#fff9f8',
+        'on-primary-container': '#fff9f8',
+        secondary: '#FFC107',
+        'secondary-container': '#fabd00',
+        'on-secondary': '#3f2e00',
+        'on-secondary-container': '#6a4e00',
+        tertiary: '#79d1fd',
+        'tertiary-container': '#007ca4',
+        error: '#ffb4ab',
+        'error-container': '#93000a',
+        outline: '#ad8885',
+        'outline-variant': '#5d3f3d',
+      },
+      fontFamily: {
+        display: ['"Outfit"', 'system-ui', 'sans-serif'],
+        body: ['"Outfit"', 'system-ui', 'sans-serif'],
+        'label-mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-lg': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '700' }],
+        'label-mono': ['12px', { lineHeight: '16px', letterSpacing: '0.05em', fontWeight: '500' }],
+        'display-lg-mobile': ['36px', { lineHeight: '44px', fontWeight: '700' }],
+        'headline-md': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+        'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+      },
+      borderRadius: {
+        sm: '0.125rem',
+        DEFAULT: '0.25rem',
+        md: '0.375rem',
+        lg: '0.5rem',
+        xl: '0.75rem',
+        full: '9999px',
+      },
+      spacing: {
+        'container-max': '1200px',
+        gutter: '24px',
+        'section-gap': '48px',
+        unit: '4px',
+        'margin-mobile': '16px',
+      },
+      animation: {
+        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+        shimmer: 'shimmer 2s linear infinite',
+      },
+      keyframes: {
+        fadeInUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+      },
+    },
+  },
+  plugins: [],
+}

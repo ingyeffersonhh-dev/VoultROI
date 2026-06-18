@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+    background-color: #000000;
+    color: #e2e2e2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    border-color: #262626;
+  }
+}
+
+@layer components {
+  .border-subtle {
+    border-color: #262626;
+  }
+
+  .title-glow {
+    text-shadow: 0 0 40px rgba(226, 29, 44, 0.15);
+  }
+
+  .card-border {
+    border: 1px solid #262626;
+    background: transparent;
+  }
+
+  .card-border-focus {
+    border-color: #e2e2e2;
+  }
+
+  .input-glow:focus {
+    box-shadow: 0 1px 0 0 #ffffff;
+  }
+}
+
+@layer utilities {
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+}
