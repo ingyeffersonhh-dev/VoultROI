@@ -82,7 +82,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'Missing DOLARVZLA_KEY environment variable' })
   }
 
-  const upstreamUrl = 'https://api.dolarvzla.com/usdt'
+  const upstreamUrl = 'https://api.dolarvzla.com/public/usdt/exchange-rate'
 
   // Check cache before fetching
   const cached = getCachedResponse(upstreamUrl)
@@ -106,14 +106,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const data = await response.json()
+    const rate = data.current?.average ?? data.current?.sell ?? 0
+    const resultData = { rate }
 
     // Cache the successful response
-    setCachedResponse(upstreamUrl, data)
+    setCachedResponse(upstreamUrl, resultData)
 
     for (const [key, value] of Object.entries(CORS_HEADERS)) {
       res.setHeader(key, value)
     }
-    return res.status(200).json(data)
+    return res.status(200).json(resultData)
   } catch (error) {
     if (error instanceof Error && error.name === 'TimeoutError') {
       return res.status(504).json({ error: 'Upstream API timed out' })
