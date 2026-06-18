@@ -6,7 +6,7 @@ interface RateCache {
   fetchedAt: number
 }
 
-const CACHE_TTL_MS = 60_000
+const CACHE_TTL_MS = 6 * 60 * 60 * 1000 // 6 horas
 
 const cache = new Map<string, RateCache>()
 

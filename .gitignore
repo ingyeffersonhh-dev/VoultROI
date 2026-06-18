@@ -47,3 +47,5 @@ out/
 
 # OpenCode configuration
 opencode.json
+
+.vercel
