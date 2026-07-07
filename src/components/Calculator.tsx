@@ -7,6 +7,7 @@ import { useBreakeven } from '@/hooks/useBreakeven'
 import { RateDisplay } from './RateDisplay'
 import { PresetButtons } from './PresetButtons'
 import { BreakevenAnalysis } from './BreakevenAnalysis'
+import { MarketSummary } from './MarketSummary'
 import { FeeEditor } from './FeeEditor'
 
 export function Calculator() {
@@ -80,6 +81,14 @@ export function Calculator() {
         />
 
 
+
+        {/* Market Summary: brecha + USDT para recuperar + margen neto */}
+        <MarketSummary
+          bcvRate={bcvRate.value}
+          usdtRate={usdtRate.value}
+          originalVes={result.originalVes}
+          finalUsdt={result.finalUsdt}
+        />
 
         {/* Breakeven Analysis */}
         <BreakevenAnalysis
