@@ -122,7 +122,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const data = (await response.json()) as CotizaveRatesResponse
 
     // Extract Binance P2P mid rate (most popular exchange)
-    const binanceP2p = data.rates.find((r) => r.market === 'binance_p2p')
+    const binanceP2p = data.rates.find((r) => r.market === 'binance')
     const rate = binanceP2p?.mid ?? 0
 
     if (rate === 0) {
