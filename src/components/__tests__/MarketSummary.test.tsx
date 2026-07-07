@@ -25,7 +25,7 @@ describe('MarketSummary', () => {
   })
 
   it('colors the margin red when in deficit', () => {
-    const { container } = render(
+    render(
       <MarketSummary bcvRate={36.5} usdtRate={38.2} originalVes={3650} finalUsdt={94.291} />,
     )
     const marginRow = screen.getByText('Margen neto USDT').parentElement
