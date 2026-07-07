@@ -19,23 +19,23 @@ describe('runFeePipeline', () => {
     expect(steps[0]!.inputAmount).toBe(100)
     expect(steps[0]!.outputAmount).toBeCloseTo(99.5, 2)
 
-    // Card fee: 2.5% → 99.5 * 0.975 = 97.0125
+    // Card fee: 1.5% → 99.5 * 0.985 = 98.0075
     expect(steps[1]!.name).toBe('card')
-    expect(steps[1]!.feePercent).toBe(2.5)
+    expect(steps[1]!.feePercent).toBe(1.5)
     expect(steps[1]!.inputAmount).toBeCloseTo(99.5, 4)
-    expect(steps[1]!.outputAmount).toBeCloseTo(97.0125, 4)
+    expect(steps[1]!.outputAmount).toBeCloseTo(98.0075, 4)
 
-    // BPay fee: 3.6% → 97.0125 * 0.964 = 93.52005
+    // BPay fee: 3.6% → 98.0075 * 0.964 = 94.47923
     expect(steps[2]!.name).toBe('bpay')
     expect(steps[2]!.feePercent).toBe(3.6)
-    expect(steps[2]!.inputAmount).toBeCloseTo(97.0125, 4)
-    expect(steps[2]!.outputAmount).toBeCloseTo(93.52005, 4)
+    expect(steps[2]!.inputAmount).toBeCloseTo(98.0075, 4)
+    expect(steps[2]!.outputAmount).toBeCloseTo(94.47923, 4)
 
-    // Convert fee: 0.0% → 93.52005 * 1.0 = 93.52005
+    // Convert fee: 0.0% → 94.47923 * 1.0 = 94.47923
     expect(steps[3]!.name).toBe('convert')
     expect(steps[3]!.feePercent).toBe(0.0)
-    expect(steps[3]!.inputAmount).toBeCloseTo(93.52005, 4)
-    expect(steps[3]!.outputAmount).toBeCloseTo(93.52005, 4)
+    expect(steps[3]!.inputAmount).toBeCloseTo(94.47923, 4)
+    expect(steps[3]!.outputAmount).toBeCloseTo(94.47923, 4)
   })
 
   it('returns $0 USDT output for $0 input', () => {
@@ -112,9 +112,9 @@ describe('computeBreakeven', () => {
   it('returns the USDT/VES rate where profit is zero', () => {
     const rate = computeBreakeven(36.5, DEFAULT_FEES, 100)
 
-    // At this rate, 93.52005 * rate === 100 * 36.5
-    // rate = 3650 / 93.52005 ≈ 39.029
-    expect(rate).toBeCloseTo(39.029, 1)
+    // At this rate, 94.47923 * rate === 100 * 36.5
+    // rate = 3650 / 94.47923 ≈ 38.633
+    expect(rate).toBeCloseTo(38.633, 1)
   })
 
   it('returns Infinity when all fees are 100%', () => {
@@ -140,7 +140,7 @@ describe('computeBreakeven', () => {
 describe('DEFAULT_FEES', () => {
   it('has correct default values', () => {
     expect(DEFAULT_FEES.bdvFee).toBe(0.5)
-    expect(DEFAULT_FEES.cardFee).toBe(2.5)
+    expect(DEFAULT_FEES.cardFee).toBe(1.5)
     expect(DEFAULT_FEES.bpayFee).toBe(3.6)
     expect(DEFAULT_FEES.convertFee).toBe(0.0)
   })

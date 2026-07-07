@@ -2,7 +2,7 @@ import type { FeeConfig, CalculationStep } from '@/types'
 
 export const DEFAULT_FEES: FeeConfig = {
   bdvFee: 0.5,
-  cardFee: 2.5,
+  cardFee: 1.5,
   bpayFee: 3.6,
   convertFee: 0.0,
 }

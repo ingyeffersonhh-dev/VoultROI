@@ -54,9 +54,9 @@ describe('Calculator', () => {
     expect(screen.getByText('USDT P2P')).toBeInTheDocument()
   })
 
-  it('does not render the fee editor', () => {
+  it('renders the fee editor', () => {
     render(<Calculator />)
-    expect(screen.queryByText('Configuración de Comisiones')).not.toBeInTheDocument()
+    expect(screen.getByText('Configuración de Comisiones')).toBeInTheDocument()
   })
 
   it('renders preset buttons', () => {

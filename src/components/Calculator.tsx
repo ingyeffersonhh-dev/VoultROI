@@ -1,15 +1,17 @@
 import { useState, useCallback } from 'react'
 import { DEFAULT_FEES } from '@/utils/calculate'
+import type { FeeConfig } from '@/types'
 import { useRates } from '@/hooks/useRates'
 import { useCalculator } from '@/hooks/useCalculator'
 import { useBreakeven } from '@/hooks/useBreakeven'
 import { RateDisplay } from './RateDisplay'
 import { PresetButtons } from './PresetButtons'
 import { BreakevenAnalysis } from './BreakevenAnalysis'
+import { FeeEditor } from './FeeEditor'
 
 export function Calculator() {
   const [amountUsd, setAmountUsd] = useState<number>(500)
-  const fees = DEFAULT_FEES
+  const [fees, setFees] = useState<FeeConfig>(DEFAULT_FEES)
 
   const { bcvRate, usdtRate, bdvRate, loading, refetch, override } = useRates()
 
@@ -88,6 +90,9 @@ export function Calculator() {
           returnedVes={result.returnedVes}
           bcvRate={bcvRate.value}
         />
+
+        {/* Fee Configuration */}
+        <FeeEditor fees={fees} onChange={setFees} amountUsd={amountUsd} />
 
       </div>
     </div>

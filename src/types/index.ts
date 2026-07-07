@@ -7,9 +7,9 @@ export interface RateResult {
 
 export interface FeeConfig {
   bdvFee: number // percent, default 0.5
-  cardFee: number // percent, default 1.26
-  bpayFee: number // percent, default 3.3
-  convertFee: number // percent, default 0.75
+  cardFee: number // percent, default 1.5
+  bpayFee: number // percent, default 3.6
+  convertFee: number // percent, default 0.0
 }
 
 export interface CalculationStep {
