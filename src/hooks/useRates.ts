@@ -76,8 +76,11 @@ export function useRates() {
     }
 
     const [bcv, usdt, bdv] = await Promise.all([
-      Promise.resolve(
-        getCached('bcv') ?? makeResult(null, 'bcv', 'Se requiere ingresar la tasa manualmente')
+      fetchOne(
+        '/api/bdv-rate',
+        'bcv',
+        'bcv',
+        (d) => (d as { rate: number }).rate,
       ),
       fetchOne(
         '/api/usdt',

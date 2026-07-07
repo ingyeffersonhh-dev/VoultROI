@@ -29,7 +29,6 @@ function isRateLimited(ip: string): boolean {
   return false
 }
 
-// Cleanup stale entries every 10s
 setInterval(() => {
   const now = Date.now()
   for (const [ip, timestamps] of rateLimitMap) {
@@ -42,8 +41,8 @@ setInterval(() => {
   }
 }, RATE_LIMIT_WINDOW_MS)
 
-// --- Response Caching: 30s TTL per upstream URL ---
-const CACHE_TTL_MS = 30_000
+// --- Response Caching: 5 min TTL (matches Cotizave refresh interval) ---
+const CACHE_TTL_MS = 5 * 60 * 1000
 
 interface CacheEntry {
   data: unknown
@@ -66,25 +65,39 @@ function setCachedResponse(url: string, data: unknown): void {
   responseCache.set(url, { data, timestamp: Date.now() })
 }
 
+interface CotizaveRate {
+  market: string
+  type: string
+  mid?: number
+  ask?: number
+  bid?: number
+  updated_at: string
+}
+
+interface CotizaveRatesResponse {
+  country: string
+  base: string
+  rates: CotizaveRate[]
+  fetched_at: string
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') {
     return res.status(204).send('')
   }
 
-  // Rate limit check
   const ip = getClientIp(req)
   if (isRateLimited(ip)) {
     return res.status(429).json({ error: 'Too many requests. Please slow down.' })
   }
 
-  const apiKey = process.env.DOLARVZLA_KEY
+  const apiKey = process.env.COTIZAVE_KEY
   if (!apiKey) {
-    return res.status(500).json({ error: 'Missing DOLARVZLA_KEY environment variable' })
+    return res.status(500).json({ error: 'Missing COTIZAVE_KEY environment variable' })
   }
 
-  const upstreamUrl = 'https://api.dolarvzla.com/public/usdt/exchange-rate'
+  const upstreamUrl = 'https://api.cotizave.com/v1/fx/rates'
 
-  // Check cache before fetching
   const cached = getCachedResponse(upstreamUrl)
   if (cached !== null) {
     for (const [key, value] of Object.entries(CORS_HEADERS)) {
@@ -96,7 +109,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const response = await fetch(upstreamUrl, {
       headers: {
-        'x-dolarvzla-key': apiKey,
+        'X-API-Key': apiKey,
+        Accept: 'application/json',
       },
       signal: AbortSignal.timeout(10_000),
     })
@@ -105,11 +119,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(502).json({ error: `Upstream API returned ${response.status}` })
     }
 
-    const data = await response.json()
-    const rate = data.current?.average ?? data.current?.sell ?? 0
-    const resultData = { rate }
+    const data = (await response.json()) as CotizaveRatesResponse
 
-    // Cache the successful response
+    // Extract Binance P2P mid rate (most popular exchange)
+    const binanceP2p = data.rates.find((r) => r.market === 'binance_p2p')
+    const rate = binanceP2p?.mid ?? 0
+
+    if (rate === 0) {
+      return res.status(502).json({ error: 'No Binance P2P rate found in Cotizave response' })
+    }
+
+    const resultData = { rate, source: 'binance-p2p', updated_at: binanceP2p?.updated_at }
+
     setCachedResponse(upstreamUrl, resultData)
 
     for (const [key, value] of Object.entries(CORS_HEADERS)) {
@@ -120,6 +141,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (error instanceof Error && error.name === 'TimeoutError') {
       return res.status(504).json({ error: 'Upstream API timed out' })
     }
-    return res.status(502).json({ error: 'Failed to fetch USDT rate' })
+    return res.status(502).json({ error: 'Failed to fetch USDT rate from Cotizave' })
   }
 }
